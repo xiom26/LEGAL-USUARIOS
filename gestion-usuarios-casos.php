@@ -13,7 +13,7 @@ class GUC_Plugin {
     /** Ajusta si usas otro rol o dominio ficticio para el correo */
     const DB_VERSION       = '1.0.0';
     const TABLE            = 'guc_users';
-    const GUC_DEFAULT_ROLE = 'customer';       // cambia a 'cliente' si tu rol personalizado se llama así (slug)
+    const GUC_DEFAULT_ROLE = 'cliente';       // cambia a 'customer' si tu rol personalizado se llama así (slug)
     const GUC_EMAIL_DOMAIN = 'legalengineering.local';   // dominio ficticio para generar emails únicos
 
     public function __construct() {
@@ -289,6 +289,23 @@ class GUC_Plugin {
         return $u;
     }
 
+    /** Obtener rol predeterminado asegurando que exista */
+    private function resolve_role(){
+        $fallback = get_option('default_role', 'subscriber');
+
+        // usar el rol configurado si existe
+        if (self::GUC_DEFAULT_ROLE && get_role(self::GUC_DEFAULT_ROLE)) {
+            return self::GUC_DEFAULT_ROLE;
+        }
+
+        // intentar con customer si está disponible
+        if (get_role('customer')) {
+            return 'customer';
+        }
+
+        return $fallback;
+    }
+
     /** Crear usuario real en WordPress (wp_users) sin necesidad de estar logueado */
     private function create_wp_user($username, $password, $display = ''){
         // correo obligatorio y único
@@ -304,7 +321,7 @@ class GUC_Plugin {
             'user_pass'    => $password,
             'user_email'   => $email,
             'display_name' => $display ?: $username,
-            'role'         => self::GUC_DEFAULT_ROLE, // customer / cliente
+            'role'         => $this->resolve_role(),
         ]);
 
         if (is_wp_error($user_id)) return $user_id;
@@ -314,6 +331,9 @@ class GUC_Plugin {
     /** ---------- AJAX ---------- */
     public function ajax_create() {
         $this->ensure_nonce_only();
+
+        // asegurar que la tabla interna exista antes de insertar
+        $this->maybe_create_table();
 
         $exp = isset($_POST['expediente']) ? sanitize_text_field($_POST['expediente']) : '';
         if (empty($exp)) wp_send_json_error(['msg'=>'Expediente es requerido'], 422);
@@ -362,6 +382,8 @@ class GUC_Plugin {
 
     public function ajax_list() {
         $this->ensure_nonce_only();
+
+        $this->maybe_create_table();
         global $wpdb;
         $table = $wpdb->prefix . self::TABLE;
         $rows = $wpdb->get_results("SELECT id, username, password_plain, entity, expediente, created_at FROM $table ORDER BY id DESC", ARRAY_A);
@@ -379,38 +401,42 @@ class GUC_Plugin {
     }
 
     public function ajax_delete() {
-    $this->ensure_nonce_only();
-    $id = isset($_POST['id']) ? absint($_POST['id']) : 0;
-    if (!$id) wp_send_json_error(['msg'=>'ID inválido'], 422);
+        $this->ensure_nonce_only();
 
-    global $wpdb;
-    $table = $wpdb->prefix . self::TABLE;
+        $this->maybe_create_table();
+        $id = isset($_POST['id']) ? absint($_POST['id']) : 0;
+        if (!$id) wp_send_json_error(['msg'=>'ID inválido'], 422);
 
-    // 1) obtener el username desde tu tabla interna
-    $row = $wpdb->get_row($wpdb->prepare("SELECT username FROM $table WHERE id=%d", $id));
-    if (!$row) wp_send_json_error(['msg'=>'Usuario no encontrado'], 404);
+        global $wpdb;
+        $table = $wpdb->prefix . self::TABLE;
 
-    // 2) si existe en wp_users, eliminarlo con la API de WP
-    $wp_user = get_user_by('login', $row->username);
-    if ($wp_user) {
-        // cargar helpers de usuario si hiciera falta
-        if (!function_exists('wp_delete_user')) {
-            require_once ABSPATH . 'wp-admin/includes/user.php';
+        // 1) obtener el username desde tu tabla interna
+        $row = $wpdb->get_row($wpdb->prepare("SELECT username FROM $table WHERE id=%d", $id));
+        if (!$row) wp_send_json_error(['msg'=>'Usuario no encontrado'], 404);
+
+        // 2) si existe en wp_users, eliminarlo con la API de WP
+        $wp_user = get_user_by('login', $row->username);
+        if ($wp_user) {
+            // cargar helpers de usuario si hiciera falta
+            if (!function_exists('wp_delete_user')) {
+                require_once ABSPATH . 'wp-admin/includes/user.php';
+            }
+            // elimina el usuario de wp_users + metas/roles
+            wp_delete_user((int)$wp_user->ID);
         }
-        // elimina el usuario de wp_users + metas/roles
-        wp_delete_user((int)$wp_user->ID);
-    }
 
-    // 3) eliminar el espejo en tu tabla interna
-    $ok = $wpdb->delete($table, ['id'=>$id], ['%d']);
-    if (!$ok) wp_send_json_error(['msg'=>'No se pudo eliminar'], 500);
+        // 3) eliminar el espejo en tu tabla interna
+        $ok = $wpdb->delete($table, ['id'=>$id], ['%d']);
+        if (!$ok) wp_send_json_error(['msg'=>'No se pudo eliminar'], 500);
 
-    wp_send_json_success(['id'=>$id]);
+        wp_send_json_success(['id'=>$id]);
     }
 
     /** Nuevo: actualizar entidad y expediente */
     public function ajax_update() {
         $this->ensure_nonce_only();
+
+        $this->maybe_create_table();
 
         $id         = isset($_POST['id']) ? absint($_POST['id']) : 0;
         $entity     = isset($_POST['entity']) ? sanitize_text_field($_POST['entity']) : '';
