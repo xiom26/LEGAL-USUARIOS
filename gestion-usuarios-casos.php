@@ -14,7 +14,7 @@ class GUC_Plugin {
     const DB_VERSION       = '1.0.0';
     const TABLE            = 'guc_users';
     const GUC_DEFAULT_ROLE = 'customer';       // cambia a 'cliente' si tu rol personalizado se llama así (slug)
-    const GUC_EMAIL_DOMAIN = 'tarjrd.local';   // dominio ficticio para generar emails únicos
+    const GUC_EMAIL_DOMAIN = 'legalengineering.local';   // dominio ficticio para generar emails únicos
 
     public function __construct() {
         register_activation_hook(__FILE__, [$this, 'activate']);
@@ -79,42 +79,48 @@ class GUC_Plugin {
             wp_enqueue_style('guc-css');
 
             $css = <<<CSS
-            .guc-wrap{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#2b2b2b}
+            @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Poppins:wght@400;500;600;700&display=swap');
+            .guc-wrap{font-family:'Poppins','Montserrat',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;color:#2e1b25;background:linear-gradient(135deg,#f8f3ec 0%,#fdfbf7 100%);padding:8px;border-radius:18px}
             .guc-wrap *{box-sizing:border-box}
-            .guc-wrap .guc-header{display:flex;align-items:center;justify-content:space-between;margin:8px 0 16px}
-            .guc-wrap .guc-title{font-weight:800;font-size:22px;margin:0}
-            .guc-wrap .guc-card{background:#fff;border:1px solid #eee;border-radius:14px;padding:10px;box-shadow:0 4px 14px rgba(0,0,0,.06)}
-            .guc-wrap .guc-btn{border:0;border-radius:14px;padding:10px 16px;cursor:pointer;transition:.15s;box-shadow:0 2px 6px rgba(0,0,0,.08);font-weight:600}
-            .guc-wrap .guc-btn-primary{background:#bfa27b;color:#fff}
-            .guc-wrap .guc-btn-primary:disabled{opacity:.6;cursor:not-allowed}
-            .guc-wrap .guc-btn-outline{background:#fff;border:2px solid #bfa27b;color:#5a4b35}
-            .guc-wrap .guc-table{width:100%;border-collapse:separate;border-spacing:0}
-            .guc-wrap .guc-table th,.guc-wrap .guc-table td{padding:12px;border-bottom:1px solid #eee;text-align:left}
-            .guc-wrap .guc-table thead th{font-size:13px;text-transform:uppercase;letter-spacing:.6px;background:#f7f3ed}
-            .guc-wrap .guc-badge-green{background:#2e7d32;color:#fff;padding:6px 10px;border-radius:999px;font-size:12px;display:inline-block;font-weight:600}
+            .guc-wrap .guc-header{display:flex;align-items:center;justify-content:space-between;margin:8px 0 16px;gap:12px}
+            .guc-wrap .guc-title{font-weight:800;font-size:24px;margin:0;color:#42041a;letter-spacing:.3px}
+            .guc-wrap .guc-card{background:#fff;border:1px solid #f0e3d4;border-radius:18px;padding:12px;box-shadow:0 8px 28px rgba(104,9,43,.12)}
+            .guc-wrap .guc-btn{border:0;border-radius:14px;padding:11px 18px;cursor:pointer;transition:.2s ease;box-shadow:0 6px 16px rgba(66,4,26,.15);font-weight:700;letter-spacing:.2px}
+            .guc-wrap .guc-btn-primary{background:linear-gradient(135deg,#68092b,#42041a);color:#fff}
+            .guc-wrap .guc-btn-primary:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(66,4,26,.25)}
+            .guc-wrap .guc-btn-primary:disabled{opacity:.65;cursor:not-allowed;box-shadow:none;transform:none}
+            .guc-wrap .guc-btn-outline{background:#fff;border:2px solid #d2ae6d;color:#42041a;box-shadow:none}
+            .guc-wrap .guc-btn-outline:hover{background:#fff7ea}
+            .guc-wrap .guc-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:14px;overflow:hidden}
+            .guc-wrap .guc-table th,.guc-wrap .guc-table td{padding:12px;border-bottom:1px solid #f0e6db;text-align:left}
+            .guc-wrap .guc-table thead th{font-size:13px;text-transform:uppercase;letter-spacing:.8px;background:#f6efe5;color:#42041a}
+            .guc-wrap .guc-table tbody tr:hover td{background:#fff7ea}
+            .guc-wrap .guc-badge-green{background:linear-gradient(135deg,#d2ae6d,#b29f59);color:#42041a;padding:7px 12px;border-radius:999px;font-size:12px;display:inline-block;font-weight:800;box-shadow:inset 0 1px 0 rgba(255,255,255,.45)}
             .guc-wrap .guc-actions{display:flex;align-items:center}
-            .guc-wrap .guc-actions .guc-icon{border:0;background:#f5f2ec;padding:8px;border-radius:10px;margin-right:6px;cursor:pointer;transition:.15s}
+            .guc-wrap .guc-actions .guc-icon{border:0;background:#f7efe5;padding:9px;border-radius:12px;margin-right:8px;cursor:pointer;transition:.18s;box-shadow:0 4px 10px rgba(0,0,0,.08);color:#42041a;font-size:14px}
             .guc-wrap .guc-actions .guc-icon:last-child{margin-right:0}
-            .guc-wrap .guc-actions .guc-view{background:#9e9e9e;color:#fff}
-            .guc-wrap .guc-actions .guc-edit{background:#ffa000;color:#fff}
-            .guc-wrap .guc-actions .guc-del{background:#e53935;color:#fff}
-            .guc-wrap .guc-empty{padding:20px;text-align:center;color:#7d7160;font-size:14px}
-            .guc-wrap .guc-modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:9999}
+            .guc-wrap .guc-actions .guc-view{background:#d2ae6d;color:#42041a}
+            .guc-wrap .guc-actions .guc-edit{background:#bb985c;color:#fff}
+            .guc-wrap .guc-actions .guc-del{background:#68092b;color:#fff}
+            .guc-wrap .guc-actions .guc-icon:hover{transform:translateY(-1px);box-shadow:0 10px 18px rgba(0,0,0,.16)}
+            .guc-wrap .guc-empty{padding:20px;text-align:center;color:#6b4b53;font-size:14px;background:#fff7ea;border-radius:14px;border:1px dashed #d2ae6d;margin-top:10px}
+            .guc-wrap .guc-modal-mask{position:fixed;inset:0;background:rgba(35,10,23,.55);display:flex;align-items:center;justify-content:center;z-index:9999;padding:14px}
             .guc-wrap .guc-modal-mask[hidden]{display:none!important}
-            .guc-wrap .guc-modal{width:min(680px,92vw);background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.2);overflow:hidden}
-            .guc-wrap .guc-modal-header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #eee;background:#4b3a31;color:#fff}
-            .guc-wrap .guc-modal-title{font-size:20px;font-weight:800;margin:0}
-            .guc-wrap .guc-close{background:transparent;border:0;font-size:20px;cursor:pointer;color:#fff}
-            .guc-wrap .guc-modal-body{padding:20px}
-            .guc-wrap .guc-field{margin-bottom:14px}
-            .guc-wrap .guc-label{display:block;font-size:13px;font-weight:700;margin-bottom:8px;color:#4b3a31}
-            .guc-wrap .guc-input{width:100%;padding:12px 12px;border-radius:10px;border:1px solid #e6e0d6;background:#fbfaf8}
-            .guc-wrap .guc-input:focus{outline:none;border-color:#bfa27b;box-shadow:0 0 0 2px rgba(191,162,123,.25)}
-            .guc-wrap .guc-input[disabled]{background:#f1f0ee;color:#8c8c8c}
-            .guc-wrap .guc-modal-footer{display:flex;gap:10px;justify-content:flex-end;padding:16px 20px;border-top:1px solid #eee}
-            .guc-wrap .guc-helper{font-size:12px;color:#9c8b74;margin-top:-6px;margin-bottom:10px}
+            .guc-wrap .guc-modal{width:min(680px,92vw);background:#fff;border-radius:24px;box-shadow:0 24px 70px rgba(0,0,0,.28);overflow:hidden;border:1px solid #f0e3d4}
+            .guc-wrap .guc-modal-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #f0e6db;background:linear-gradient(135deg,#68092b,#42041a);color:#fff}
+            .guc-wrap .guc-modal-title{font-size:20px;font-weight:800;margin:0;letter-spacing:.4px}
+            .guc-wrap .guc-close{background:transparent;border:0;font-size:22px;cursor:pointer;color:#fff}
+            .guc-wrap .guc-modal-body{padding:22px 20px;background:#fffdfa}
+            .guc-wrap .guc-field{margin-bottom:16px}
+            .guc-wrap .guc-label{display:block;font-size:13px;font-weight:700;margin-bottom:8px;color:#42041a;letter-spacing:.2px}
+            .guc-wrap .guc-input{width:100%;padding:12px 12px;border-radius:12px;border:1px solid #e6d6c2;background:#fffefb;font-family:'Montserrat','Poppins',sans-serif;transition:.18s}
+            .guc-wrap .guc-input:focus{outline:none;border-color:#d2ae6d;box-shadow:0 0 0 3px rgba(210,174,109,.35)}
+            .guc-wrap .guc-input[disabled]{background:#f4efe6;color:#8c7b74}
+            .guc-wrap .guc-modal-footer{display:flex;gap:10px;justify-content:flex-end;padding:16px 20px;border-top:1px solid #f0e6db;background:#fff}
+            .guc-wrap .guc-helper{font-size:12px;color:#7d625d;margin-top:-6px;margin-bottom:10px}
             @media (max-width:640px){
                 .guc-wrap .guc-header{flex-direction:column;align-items:flex-start;gap:12px}
+                .guc-wrap .guc-title{font-size:22px}
             }
             CSS;
 
@@ -165,7 +171,7 @@ class GUC_Plugin {
                     <div class="guc-modal-body">
                         <div class="guc-field">
                             <label class="guc-label" for="guc-expediente">Nro Expediente</label>
-                            <input type="text" class="guc-input" id="guc-expediente" placeholder="Ej.: TAR-2033-GL">
+                            <input type="text" class="guc-input" id="guc-expediente" placeholder="Ej.: LEG-2033-GL">
                             <div class="guc-helper">Se guardará exactamente como lo ingreses.</div>
                         </div>
                     </div>
@@ -225,11 +231,11 @@ class GUC_Plugin {
                         </div>
                         <div class="guc-field">
                             <label class="guc-label" for="guc-edit-entity">Entidad</label>
-                            <input type="text" class="guc-input" id="guc-edit-entity" placeholder="Ej.: Policía / TAR">
+                            <input type="text" class="guc-input" id="guc-edit-entity" placeholder="Ej.: Fiscalía / LEGAL ENGINEERING">
                         </div>
                         <div class="guc-field">
                             <label class="guc-label" for="guc-edit-expediente">Expediente</label>
-                            <input type="text" class="guc-input" id="guc-edit-expediente" placeholder="Ej.: TAR-2033-GL">
+                            <input type="text" class="guc-input" id="guc-edit-expediente" placeholder="Ej.: LEG-2033-GL">
                         </div>
                     </div>
                     <div class="guc-modal-footer">
