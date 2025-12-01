@@ -83,7 +83,7 @@ class GUC_Plugin {
             .guc-wrap{font-family:'Montserrat','Poppins',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;color:#2e1b25;background:#f8f3ec;padding:8px;border-radius:18px}
             .guc-wrap *{box-sizing:border-box}
             .guc-wrap .guc-header{display:flex;align-items:center;justify-content:space-between;margin:8px 0 16px;gap:12px}
-            .guc-wrap .guc-title{font-family:'Montserrat','Poppins',sans-serif;font-weight:800;font-size:24px;margin:0;color:#42041a;letter-spacing:.3px}
+            .guc-wrap .guc-title{font-family:'Montserrat','Poppins',sans-serif;font-weight:800;font-size:24px;margin:0;color:#68092b;letter-spacing:.3px}
             .guc-wrap .guc-card{background:#fff;border:1px solid #f0e3d4;border-radius:18px;padding:12px;box-shadow:0 8px 28px rgba(104,9,43,.12)}
             .guc-wrap .guc-btn{border:0;border-radius:14px;padding:11px 18px;cursor:pointer;transition:.2s ease;box-shadow:0 6px 16px rgba(66,4,26,.15);font-weight:700;letter-spacing:.2px;font-family:'Montserrat','Poppins',sans-serif}
             .guc-wrap .guc-btn-primary{background:#bb985c;color:#fff}
@@ -93,7 +93,7 @@ class GUC_Plugin {
             .guc-wrap .guc-btn-outline:hover{background:#fff7ea}
             .guc-wrap .guc-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:14px;overflow:hidden}
             .guc-wrap .guc-table th,.guc-wrap .guc-table td{padding:12px;border-bottom:1px solid #f0e6db;text-align:left}
-            .guc-wrap .guc-table thead th{font-size:13px;text-transform:uppercase;letter-spacing:.8px;background:#f6efe5;color:#42041a}
+            .guc-wrap .guc-table thead th{font-size:13px;text-transform:uppercase;letter-spacing:.8px;background:#fff8f2;color:#68092b}
             .guc-wrap .guc-table tbody tr:hover td{background:#fff7ea}
             .guc-wrap .guc-badge-green{background:#d2ae6d;color:#42041a;padding:7px 12px;border-radius:999px;font-size:12px;display:inline-block;font-weight:800;box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
             .guc-wrap .guc-actions{display:flex;align-items:center}
@@ -106,12 +106,12 @@ class GUC_Plugin {
             .guc-wrap .guc-empty{padding:20px;text-align:center;color:#6b4b53;font-size:14px;background:#fff7ea;border-radius:14px;border:1px dashed #d2ae6d;margin-top:10px}
             .guc-wrap .guc-modal-mask{position:fixed;inset:0;background:rgba(52,14,29,.4);display:flex;align-items:center;justify-content:center;z-index:9999;padding:14px}
             .guc-wrap .guc-modal-mask[hidden]{display:none!important}
-            .guc-wrap .guc-modal{width:min(680px,92vw);background:#f8f3ec;border-radius:24px;box-shadow:0 24px 70px rgba(0,0,0,.24);overflow:hidden;border:1px solid #d2ae6d;font-family:'Montserrat','Poppins',sans-serif;color:#42041a;position:relative}
-            .guc-wrap .guc-modal-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #d2ae6d;background:#bb985c;color:#42041a;box-shadow:inset 0 -4px 0 #68092b}
-            .guc-wrap .guc-modal-title{font-family:'Montserrat','Poppins',sans-serif;font-size:20px;font-weight:800;margin:0;letter-spacing:.2px;color:#42041a}
+            .guc-wrap .guc-modal{width:min(680px,92vw);background:#fff;border-radius:24px;box-shadow:0 24px 70px rgba(0,0,0,.24);overflow:hidden;border:1px solid #d2ae6d;font-family:'Montserrat','Poppins',sans-serif;color:#42041a;position:relative;border-top:6px solid #68092b}
+            .guc-wrap .guc-modal-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:3px solid #d2ae6d;background:#68092b;color:#fff}
+            .guc-wrap .guc-modal-title{font-family:'Montserrat','Poppins',sans-serif;font-size:20px;font-weight:800;margin:0;letter-spacing:.2px;color:#fff}
             .guc-wrap .guc-close{background:#fff;border:2px solid #d2ae6d;font-size:18px;cursor:pointer;color:#42041a;width:34px;height:34px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 8px 18px rgba(66,4,26,.18);line-height:1;transition:.18s ease;margin-left:12px}
             .guc-wrap .guc-close:hover{background:#fff7ea;transform:translateY(-1px);box-shadow:0 12px 22px rgba(66,4,26,.22)}
-            .guc-wrap .guc-modal-body{padding:22px 20px;background:#fdf8f1;color:#42041a}
+            .guc-wrap .guc-modal-body{padding:22px 20px;background:#fff;color:#42041a}
             .guc-wrap .guc-field{margin-bottom:16px}
             .guc-wrap .guc-label{display:block;font-size:13px;font-weight:700;margin-bottom:8px;color:#42041a;letter-spacing:.2px;font-family:'Montserrat','Poppins',sans-serif}
             .guc-wrap .guc-input{width:100%;padding:12px 12px;border-radius:12px;border:1px solid #d2ae6d;background:#fff;font-family:'Montserrat','Poppins',sans-serif;transition:.18s;color:#2e1b25}
